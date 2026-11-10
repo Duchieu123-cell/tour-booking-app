@@ -1,0 +1,38 @@
+### 1. Health check
+GET http://localhost:5000/api/health
+
+### 2. Danh sách tour mặc định (page=1, limit=9, sort=newest)
+GET http://localhost:5000/api/tours
+
+### 3. Phân trang và sắp xếp theo giá tăng dần (page=1, limit=3, price_asc)
+GET http://localhost:5000/api/tours?page=1&limit=3&sort=price_asc
+
+### 4. Phân trang trang 2 theo giá tăng dần
+GET http://localhost:5000/api/tours?page=2&limit=3&sort=price_asc
+
+### 5. Sắp xếp theo giá giảm dần (price_desc)
+GET http://localhost:5000/api/tours?sort=price_desc
+
+### 6. Tìm kiếm tour theo từ khóa tiêu đề ("Hạ Long")
+GET http://localhost:5000/api/tours?search=Hạ+Long
+
+### 7. Tìm kiếm tour theo địa điểm ("Đà Nẵng")
+GET http://localhost:5000/api/tours?search=Đà+Nẵng
+
+### 8. Lọc tour theo khoảng giá (minPrice=2000000 & maxPrice=4000000)
+GET http://localhost:5000/api/tours?minPrice=2000000&maxPrice=4000000
+
+### 9. Chi tiết tour theo slug hợp lệ (kèm danh sách departure tương lai)
+GET http://localhost:5000/api/tours/ha-noi-vinh-ha-long-3n2d
+
+### 10. Chi tiết tour không tồn tại (Kiểm tra lỗi 404 Not Found)
+GET http://localhost:5000/api/tours/non-existent-tour-slug
+
+### 11. Validate lỗi 400: minPrice lớn hơn maxPrice
+GET http://localhost:5000/api/tours?minPrice=5000000&maxPrice=1000000
+
+### 12. Validate lỗi 400: limit vượt quá tối đa 50
+GET http://localhost:5000/api/tours?limit=100
+
+### 13. Validate lỗi 400: sort không hợp lệ
+GET http://localhost:5000/api/tours?sort=invalid_sort

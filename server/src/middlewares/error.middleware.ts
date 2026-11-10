@@ -1,0 +1,41 @@
+import { type ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
+import { AppError } from '../errors/app-error.js';
+
+export interface ErrorResponse {
+  error: {
+    message: string;
+    details?: unknown;
+  };
+}
+
+export const errorHandler: ErrorRequestHandler = (err, _req, res, _next): void => {
+  if (err instanceof ZodError) {
+    res.status(400).json({
+      error: {
+        message: 'Validation failed',
+        details: err.issues.map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
+      },
+    });
+    return;
+  }
+
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      error: {
+        message: err.message,
+      },
+    });
+    return;
+  }
+
+  console.error('[Unhandled Error]:', err);
+  res.status(500).json({
+    error: {
+      message: 'Internal server error',
+    },
+  });
+};

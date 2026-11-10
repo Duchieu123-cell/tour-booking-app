@@ -1,5 +1,7 @@
 import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
+import { tourRouter } from './routes/tour.routes.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 export interface HealthData {
   status: 'ok';
@@ -15,6 +17,7 @@ export const createApp = (): Express => {
   app.use(cors());
   app.use(express.json());
 
+  // ─── Health check ───────────────────────────────────────────────────────
   app.get('/api/health', (_req: Request, res: Response<ApiResponse<HealthData>>): void => {
     res.status(200).json({
       data: {
@@ -22,6 +25,12 @@ export const createApp = (): Express => {
       },
     });
   });
+
+  // ─── API Routes ─────────────────────────────────────────────────────────
+  app.use('/api/tours', tourRouter);
+
+  // ─── Centralized Error Handler (must be last middleware) ────────────────
+  app.use(errorHandler);
 
   return app;
 };
