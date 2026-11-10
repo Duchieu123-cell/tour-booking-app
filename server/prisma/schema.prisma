@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role      @default(USER)
+  createdAt    DateTime  @default(now())
+  bookings     Booking[]
+
+  @@map("users")
+}
+
+model Tour {
+  id           String      @id @default(cuid())
+  title        String
+  slug         String      @unique
+  description  String
+  location     String
+  durationDays Int
+  priceVnd     Int
+  imageUrl     String
+  createdAt    DateTime    @default(now())
+  departures   Departure[]
+
+  @@index([location])
+  @@index([priceVnd])
+  @@map("tours")
+}
+
+model Departure {
+  id        String    @id @default(cuid())
+  tourId    String
+  tour      Tour      @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  capacity  Int
+  priceVnd  Int?
+  bookings  Booking[]
+
+  @@index([tourId])
+  @@index([startDate])
+  @@map("departures")
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  departureId   String
+  departure     Departure     @relation(fields: [departureId], references: [id], onDelete: Restrict)
+  guests        Int
+  totalPriceVnd Int
+  status        BookingStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+
+  @@index([userId])
+  @@index([departureId])
+  @@index([status])
+  @@map("bookings")
+}

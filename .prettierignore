@@ -5,3 +5,5 @@ coverage/
 .git/
 package-lock.json
 AGENTS.md
+**/src/generated/**
+**/prisma/migrations/**

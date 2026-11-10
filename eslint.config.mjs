@@ -4,7 +4,14 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/.vite/**'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/.vite/**',
+      '**/src/generated/**',
+      '**/prisma/migrations/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
